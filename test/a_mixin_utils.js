@@ -38,6 +38,23 @@ describe('mixin utilities', function(){
         });
     });
 
+    describe('mixins.OVERRIDE', function(){
+        it('it returns right if it is not undefined', function(){
+            var left = sinon.stub().returns(13);
+            var right = sinon.stub().returns(14);
+
+            var res = mixins.OVERRIDE(left, right, "foobar");
+            expect(res()).to.be.eql(right());
+        });
+
+        it('it returns left if right is undefined', function(){
+            var left = sinon.stub().returns(13);
+
+            var res = mixins.OVERRIDE(left, undefined, "foobar");
+            expect(res()).to.be.eql(left());
+        });
+    });
+
     describe('mixins.MANY_MERGED', function(){
         var test = function(leftRet, rightRet){
             var left = sinon.stub().returns(leftRet);

@@ -28,7 +28,7 @@ describe('mixin into objects', function(){
 
                   return BaseKlass;
                 })();
- 
+
                 var Klass = (function (BaseKlass) {
                   function Klass() {
                     if (Object.getPrototypeOf(Klass) !== null) {
@@ -53,7 +53,7 @@ describe('mixin into objects', function(){
                       writable: true,
                       configurable: true
                     }
- 
+
                   });
 
                   return Klass;
@@ -83,7 +83,7 @@ describe('mixin into objects', function(){
             expect(bothValue).to.be(1+1+10);
         });
 
- 
+
         it('creates non-enumerable methods', function(){
             mixin(klass.prototype, {
                 nonenumerable: function(){}
@@ -91,7 +91,7 @@ describe('mixin into objects', function(){
             expect('nonenumerable' in klass.prototype).to.be.ok();
             expect(Object.keys(klass.prototype).indexOf('nonenumerable')).to.be(-1);
         });
- 
+
         it('doesn\'t attempt to defineProperty on existing source properties', function(){
             Object.defineProperty(klass.prototype, 'noconfig', {writable: true});
             mixin(klass.prototype, {
@@ -131,6 +131,11 @@ describe('mixin into objects', function(){
             }).to.throwException();
         });
 
+        it('accepts rules as string', function(){
+            var obj = {foo: {a: 2}};
+            mixins({foo: 'MANY_MERGED_LOOSE'})(obj, {foo: {b: 3}});
+            expect(obj.foo).to.be.eql({a: 2, b: 3});
+        });
     });
 
     describe('nonFunctionProperty', function(){
@@ -160,9 +165,9 @@ describe('mixin into objects', function(){
             var second = {};
             m(second, {foo: null});
             expect(second.foo).to.be(null);
-       
+
             var third = {foo: null};
-            expect(function(){ 
+            expect(function(){
                 m(third, {foo: null});
             }).to.throwException(/Cannot mixin.*foo.*types are Null and Null/g);
 
@@ -186,7 +191,7 @@ describe('mixin into objects', function(){
 
         it('calls nonFunctionProperty', function(){
             mixins({}, {
-                nonFunctionProperty: function(a, b, key){ 
+                nonFunctionProperty: function(a, b, key){
                     expect(a).to.be('string bar');
                     expect(b).to.be('sentinel');
                     expect(key).to.be('bar');
@@ -199,7 +204,7 @@ describe('mixin into objects', function(){
         it('calls nonFunctionProperty when one is a function', function(){
             var fn = function(){};
             mixins({}, {
-                nonFunctionProperty: function(a, b, key){ 
+                nonFunctionProperty: function(a, b, key){
                     expect(a).to.be('string bar');
                     expect(b).to.be(fn);
                     expect(key).to.be('bar');

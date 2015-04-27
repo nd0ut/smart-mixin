@@ -45,6 +45,15 @@ var mixins = module.exports = function makeMixinFunction(rules, _opts){
         Object.keys(mixin).forEach(function(key){
             var left = source[key], right = mixin[key], rule = rules[key];
 
+            if(typeof rule === 'string') {
+                if(mixins[rule]) {
+                    rule = mixins[rule];
+                }
+                else {
+                    thrower('cannot find rule ' + rule);
+                }
+            }
+
             // this is just a weird case where the key was defined, but there's no value
             // behave like the key wasn't defined
             if (left === undefined && right === undefined) return;
@@ -168,5 +177,9 @@ mixins.REDUCE_RIGHT = function(_left, _right, key){
     return function(args){
         return left.call(this, right.apply(this, args));
     };
+};
+
+mixins.OVERRIDE = function(left, right, key){
+    return right || left;
 };
 
